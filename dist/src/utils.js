@@ -18,7 +18,9 @@ function makeKey(e) {
 exports.makeKey = makeKey;
 function filterArgs(args) {
     // console.log(args.map((a) => a.kind).join(',')); // debug
-    return args.filter(function (a) { return a.kind === ts.SyntaxKind.StringLiteral || isValidQuantifier(a); });
+    return args.filter(function (a) { return a.kind === ts.SyntaxKind.StringLiteral
+        || a.kind === ts.SyntaxKind.TemplateExpression
+        || isValidQuantifier(a); });
 }
 exports.filterArgs = filterArgs;
 function isValidQuantifier(node) {

@@ -27,9 +27,9 @@ describe('Test simple extraction', function () {
         assert.strictEqual(extracted['Some more text'].entry, 'Some more text');
     });
     it('Extracts strings with valid simple placeholders of different types', function () {
-        var func = "\n    function simple() {\n      let a = _t('Some text %1', [12 + 12]); // numeric binary expression\n      a = _t('Some next text %1', [-12]); // numeric unary expression\n      a = _t('Some more next text %1', [12]); // numeric literal\n      const b = _t('Some %1 more text', ['string placeholder']); // string literal\n      let c = _t('%1 more text', [a]); // variable\n      c = _t('%1 more next text', [a ? '123' : '431']); // ternary expression\n      c = _t('more %1 more', [Date.now()]); // call expression\n      return { a, b, c };\n    }";
+        var func = "\n    function simple() {\n      let a = _t('Some text %1', [12 + 12]); // numeric binary expression\n      a = _t('Some next text %1', [-12]); // numeric unary expression\n      a = _t('Some more next text %1', [12]); // numeric literal\n      const b = _t('Some %1 more text', ['string placeholder']); // string literal\n      let c = _t('%1 more text', [a]); // variable\n      c = _t('%1 more next text', [a ? '123' : '431']); // ternary expression\n      c = _t('more %1 more', [Date.now()]); // call expression\n      const d = _t('some text %1 for template string', [`${1 + 2}`]\n      return { a, b, c, d };\n    }";
         var extracted = (0, util_1.getExtractedStrings)(func);
-        assert.strictEqual(Object.keys(extracted).length, 7);
+        assert.strictEqual(Object.keys(extracted).length, 8);
         assert.strictEqual(extracted['Some text %1'].type, 'single');
         assert.strictEqual(extracted['Some text %1'].context, undefined);
         assert.strictEqual(extracted['Some text %1'].entry, 'Some text %1');
@@ -39,6 +39,7 @@ describe('Test simple extraction', function () {
         assert.strictEqual(extracted['%1 more text'].entry, '%1 more text');
         assert.strictEqual(extracted['%1 more next text'].entry, '%1 more next text');
         assert.strictEqual(extracted['more %1 more'].entry, 'more %1 more');
+        assert.strictEqual(extracted['some text %1 for template string'].entry, 'some text %1 for template string');
     });
     it('Extracts strings with many placeholders', function () {
         var func = "\n    function simple() {\n      const a = _t('Some %2 text %1 and %3', [12, 43, '15352']);\n      const b = _t('Some %1 more %2 text', ['string placeholder', 123]);\n      return { a, b };\n    }";
