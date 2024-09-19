@@ -54,11 +54,12 @@ describe('Test simple extraction', () => {
       let c = _t('%1 more text', [a]); // variable
       c = _t('%1 more next text', [a ? '123' : '431']); // ternary expression
       c = _t('more %1 more', [Date.now()]); // call expression
-      return { a, b, c };
+      const d = _t('some text %1 for template string', [\`\${1 + 2}\`]
+      return { a, b, c, d };
     }`;
 
     const extracted = getExtractedStrings(func);
-    assert.strictEqual(Object.keys(extracted).length, 7);
+    assert.strictEqual(Object.keys(extracted).length, 8);
     assert.strictEqual(extracted['Some text %1'].type, 'single');
     assert.strictEqual(extracted['Some text %1'].context, undefined);
     assert.strictEqual(extracted['Some text %1'].entry, 'Some text %1');
@@ -68,6 +69,7 @@ describe('Test simple extraction', () => {
     assert.strictEqual(extracted['%1 more text'].entry, '%1 more text');
     assert.strictEqual(extracted['%1 more next text'].entry, '%1 more next text');
     assert.strictEqual(extracted['more %1 more'].entry, 'more %1 more');
+    assert.strictEqual(extracted['some text %1 for template string'].entry, 'some text %1 for template string');
   });
 
   it('Extracts strings with many placeholders', () => {

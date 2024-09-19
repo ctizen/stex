@@ -19,7 +19,11 @@ export function makeKey(e: I18NEntry): string {
 
 export function filterArgs(args: ts.Node[]): ts.Node[] {
   // console.log(args.map((a) => a.kind).join(',')); // debug
-  return args.filter((a) => a.kind === ts.SyntaxKind.StringLiteral || isValidQuantifier(a));
+  return args.filter(
+    (a) => a.kind === ts.SyntaxKind.StringLiteral
+      || a.kind === ts.SyntaxKind.TemplateExpression
+      || isValidQuantifier(a)
+  );
 }
 
 export function isValidQuantifier(node: ts.Node): boolean {
